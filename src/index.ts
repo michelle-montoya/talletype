@@ -63,4 +63,38 @@ router.post("/products", (req, res) => {
         message: "Product created",
         data: newProduct
     });
+
+router.put("/products/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const product = products.find(p => p.id === id);
+
+    if (!product) {
+    return res.status(404).json({ error: "Product not found" });
+    }
+
+    const { name, price, category } = req.body;
+
+// Solo actualizamos lo que envían
+    if (name !== undefined) product.name = name;
+    if (price !== undefined) product.price = price;
+    if (category !== undefined) product.category = category;
+
+    res.json({ message: "Product updated", data: product });
+});
+
+router.delete("/products/:id", (req, res) => {
+    const id = Number(req.params.id);
+
+    const index = products.findIndex(p => p.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({ error: "Product not found" });
+    }
+
+    products.splice(index, 1);
+
+    res.json({ message: "Product deleted" });
+});
+
+
 });
